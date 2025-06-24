@@ -16,16 +16,9 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  config:
-    import: optional:configserver:http://localhost:8888/
-
   cloud:
-    openfeign:
-      client:
-        config:
-          default:
-            connectTimeout: 5000
-            readTimeout: 5000
+    config:
+      enabled: false    # <--- disable config server import
 
 eureka:
   client:
@@ -33,23 +26,17 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka/
-  instance:
-    prefer-ip-address: true
+
+cloud:
+  openfeign:
+    client:
+      config:
+        default:
+          connectTimeout: 5000
+          readTimeout: 5000
 
 logging:
   level:
     org.springframework.cloud.openfeign: DEBUG
     org.springframework.web.client.RestTemplate: DEBUG
     org.example.paymentservice.client: DEBUG
-
-
-
-#  POST http://localhost:8085/api/payments
-#Content-Type: application/json
-#
-#  {
-#    "vehicleId": 1,
-#    "parkingDetailsId": 3,
-#    "status": "SUCCESS"
-#  }
-

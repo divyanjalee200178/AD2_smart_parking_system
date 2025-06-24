@@ -22,7 +22,7 @@ public class UserClient {
                     .header("Authorization", "Bearer " + AUTH_TOKEN)
                     .retrieve()
                     .bodyToMono(Void.class)
-                    .block(); // Make the call synchronous
+                    .block();
             return true;
         } catch (WebClientResponseException.NotFound ex) {
             return false;

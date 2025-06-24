@@ -1,5 +1,6 @@
 package org.example.parkingservice.controller;
 
+import org.example.parkingservice.dto.ParkingDetailsResponse;
 import org.example.parkingservice.entity.ParkingSpace;
 import org.example.parkingservice.entity.ParkingSpaceDetails;
 import org.example.parkingservice.service.ParkingSpaceService;
@@ -40,9 +41,17 @@ public class ParkingSpaceDetailsController {
     }
 
     @GetMapping("/detail/{detailId}")
-    public ResponseEntity<ParkingSpaceDetails> getDetailById(@PathVariable Long detailId) {
+    public ResponseEntity<ParkingDetailsResponse> getDetailById(@PathVariable Long detailId) {
         ParkingSpaceDetails detail = parkingSpaceDetailsService.getDetailById(detailId);
-        return ResponseEntity.ok(detail);
+
+        ParkingDetailsResponse response = new ParkingDetailsResponse();
+        response.setId(detail.getId());
+        response.setNumberPlate(detail.getNumberPlate());
+        response.setEntryTime(detail.getEntryTime());
+        response.setExitTime(detail.getExitTime());
+        response.setDuration(detail.getDuration());
+
+        return ResponseEntity.ok(response);
     }
 
 }

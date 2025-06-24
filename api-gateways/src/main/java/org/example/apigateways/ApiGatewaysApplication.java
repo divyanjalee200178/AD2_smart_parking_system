@@ -1,17 +1,14 @@
-package org.example.paymentservice;
+package org.example.apigateways;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients(basePackages = "org.example.paymentservice.client")
 @EnableDiscoveryClient
-public class PaymentServiceApplication {
-
+public class ApiGatewaysApplication {
     public static void main(String[] args) {
-        SpringApplication.run(PaymentServiceApplication.class, args);
+        SpringApplication.run(ApiGatewaysApplication.class, args);
     }
-
 }
+

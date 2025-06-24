@@ -1,4 +1,4 @@
-package org.example.paymentservice.service.serviceImpl;
+package org.example.paymentservice.service.impl;
 
 import org.example.paymentservice.client.ParkingDetailsClient;
 import org.example.paymentservice.dto.ParkingDetailsResponse;
@@ -26,7 +26,6 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public PaymentDTO createPayment(PaymentDTO dto) {
-        // Call parking-space-service through Feign client
         ParkingDetailsResponse parkingDetails = parkingDetailsClient.getParkingDetailsById(dto.getParkingDetailsId());
 
         if (parkingDetails == null) {
@@ -37,23 +36,19 @@ public class PaymentServiceImpl implements PaymentService {
             throw new RuntimeException("Vehicle has not exited yet.");
         }
 
-        // Calculate duration and payment amount
         Duration duration = Duration.between(parkingDetails.getEntryTime(), parkingDetails.getExitTime());
         long hours = Math.max(1, duration.toHours());
         double amount = hours * 150.0;
 
-        // Fill DTO with calculated data
         dto.setPaidAmount(amount);
         dto.setPaidDate(LocalDateTime.now());
         dto.setStatus(PaymentDTO.Status.SUCCESS);
 
-        // Save payment entity
         Payment payment = mapToEntity(dto);
         payment = paymentRepo.save(payment);
 
         return mapToDTO(payment);
     }
-
 
     @Override
     public PaymentDTO getPaymentById(Long id) {
@@ -73,7 +68,6 @@ public class PaymentServiceImpl implements PaymentService {
         paymentRepo.deleteById(id);
     }
 
-    // Safely map DTO to Entity
     private Payment mapToEntity(PaymentDTO dto) {
         return new Payment(
                 dto.getId(),
@@ -81,19 +75,18 @@ public class PaymentServiceImpl implements PaymentService {
                 dto.getPaidAmount(),
                 dto.getVehicleId(),
                 dto.getParkingDetailsId(),
-                Payment.Status.SUCCESS // safely hardcoded
+                Payment.Status.SUCCESS
         );
     }
 
-    // Convert Entity to DTO
     private PaymentDTO mapToDTO(Payment payment) {
-        return new PaymentDTO(
-                payment.getId(),
-                payment.getPaidDate(),
-                payment.getPaidAmount(),
-                payment.getVehicleId(),
-                payment.getParkingDetailsId(),
-                PaymentDTO.Status.valueOf(payment.getStatus().name())
-        );
+        PaymentDTO dto = new PaymentDTO();
+        dto.setId(payment.getId());
+        dto.setPaidDate(payment.getPaidDate());
+        dto.setPaidAmount(payment.getPaidAmount());
+        dto.setVehicleId(payment.getVehicleId());
+        dto.setParkingDetailsId(payment.getParkingDetailsId());
+        dto.setStatus(PaymentDTO.Status.valueOf(payment.getStatus().name()));
+        return dto;
     }
 }
