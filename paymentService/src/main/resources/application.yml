@@ -1,0 +1,55 @@
+server:
+  port: 8085
+
+spring:
+  application:
+    name: payment-service
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/Payment_service_db?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: Ijse@123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  config:
+    import: optional:configserver:http://localhost:8888/
+
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+logging:
+  level:
+    org.springframework.cloud.openfeign: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.example.paymentservice.client: DEBUG
+
+
+
+#  POST http://localhost:8085/api/payments
+#Content-Type: application/json
+#
+#  {
+#    "vehicleId": 1,
+#    "parkingDetailsId": 3,
+#    "status": "SUCCESS"
+#  }
+
