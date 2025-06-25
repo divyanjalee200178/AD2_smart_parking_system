@@ -8,7 +8,7 @@ spring:
     config:
       server:
         git:
-          uri:
+          uri: https://github.com/divyanjalee200178/SmartParkingManagementServiceRepo
           clone-on-start: true
 
 
