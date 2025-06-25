@@ -1,6 +1,7 @@
 package org.example.parkingservice.controller;
 
 import org.example.parkingservice.dto.ParkingDetailsResponse;
+import org.example.parkingservice.dto.ParkingSpaceDetailsDTO;
 import org.example.parkingservice.entity.ParkingSpace;
 import org.example.parkingservice.entity.ParkingSpaceDetails;
 import org.example.parkingservice.service.ParkingSpaceService;
@@ -24,10 +25,27 @@ public class ParkingSpaceDetailsController {
     @PostMapping("/{spaceId}/details")
     public ResponseEntity<ParkingSpaceDetails> addDetail(
             @PathVariable Long spaceId,
-            @RequestBody ParkingSpaceDetails detail) {
-        ParkingSpaceDetails created = parkingSpaceDetailsService.addParkingDetail(spaceId, detail);
+            @RequestBody ParkingSpaceDetailsDTO dto) {
+
+        ParkingSpaceDetails created = parkingSpaceDetailsService.addParkingDetail(spaceId, dto);
+
         return ResponseEntity.ok(created);
     }
+
+    @PutMapping("/{spaceId}/details/{detailId}")
+    public ResponseEntity<ParkingSpaceDetails> updateDetail(
+            @PathVariable Long spaceId,
+            @PathVariable Long detailId,
+            @RequestBody ParkingSpaceDetailsDTO dto) {
+        try {
+            ParkingSpaceDetails updated = parkingSpaceDetailsService.updateParkingDetail(spaceId, detailId, dto);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 
     @GetMapping("/{spaceId}/details")
     public ResponseEntity<List<ParkingSpaceDetails>> getDetails(@PathVariable Long spaceId) {

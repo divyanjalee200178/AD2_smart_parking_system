@@ -25,8 +25,6 @@ public class ParkingSpaceDetailsDTO {
 
     private Long duration;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parking_space_id")
     private ParkingSpace parkingSpace;
 }
 

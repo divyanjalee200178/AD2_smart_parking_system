@@ -1,5 +1,6 @@
 package org.example.parkingservice.service.impl;
 
+import org.example.parkingservice.dto.ParkingSpaceDetailsDTO;
 import org.example.parkingservice.entity.ParkingSpace;
 import org.example.parkingservice.entity.ParkingSpaceDetails;
 import org.example.parkingservice.repo.ParkingSpaceDetailsRepo;
@@ -26,18 +27,46 @@ public class ParkingSpaceServiceDetailsImpl implements ParkingSpaceServiceDetail
     // --- ParkingSpaceDetails logic ---
 
     @Override
-    public ParkingSpaceDetails addParkingDetail(Long spaceId, ParkingSpaceDetails detail) {
+    public ParkingSpaceDetails addParkingDetail(Long spaceId, ParkingSpaceDetailsDTO dto) {
         ParkingSpace space = parkingSpaceRepo.findById(spaceId)
                 .orElseThrow(() -> new RuntimeException("Parking space not found"));
+
+        ParkingSpaceDetails detail = new ParkingSpaceDetails();
+        detail.setNumberPlate(dto.getNumberPlate());
+        detail.setEntryTime(dto.getEntryTime());
+        detail.setExitTime(dto.getExitTime());
         detail.setParkingSpace(space);
 
-        if (detail.getEntryTime() != null && detail.getExitTime() != null) {
-            long duration = Duration.between(detail.getEntryTime(), detail.getExitTime()).toMinutes();
+        if (dto.getEntryTime() != null && dto.getExitTime() != null) {
+            long duration = Duration.between(dto.getEntryTime(), dto.getExitTime()).toMinutes();
             detail.setDuration(duration);
         }
 
         return parkingSpaceDetailsRepo.save(detail);
     }
+
+    public ParkingSpaceDetails updateParkingDetail(Long spaceId, Long detailId, ParkingSpaceDetailsDTO dto) {
+        ParkingSpaceDetails existingDetail = parkingSpaceDetailsRepo.findById(detailId)
+                .orElseThrow(() -> new RuntimeException("Parking detail not found"));
+
+        ParkingSpace space = parkingSpaceRepo.findById(spaceId)
+                .orElseThrow(() -> new RuntimeException("Parking space not found"));
+
+        // Update fields
+        existingDetail.setNumberPlate(dto.getNumberPlate());
+        existingDetail.setEntryTime(dto.getEntryTime());
+        existingDetail.setExitTime(dto.getExitTime());
+        existingDetail.setParkingSpace(space);
+
+        if (dto.getEntryTime() != null && dto.getExitTime() != null) {
+            long duration = Duration.between(dto.getEntryTime(), dto.getExitTime()).toMinutes();
+            existingDetail.setDuration(duration);
+        }
+
+        return parkingSpaceDetailsRepo.save(existingDetail);
+    }
+
+
 
     @Override
     public List<ParkingSpaceDetails> getDetailsBySpace(Long spaceId) {
@@ -49,7 +78,7 @@ public class ParkingSpaceServiceDetailsImpl implements ParkingSpaceServiceDetail
         parkingSpaceDetailsRepo.deleteById(detailId);
     }
 
-    @Override
+
     public ParkingSpaceDetails getDetailById(Long detailId) {
         return parkingSpaceDetailsRepo.findById(detailId)
                 .orElseThrow(() -> new RuntimeException("Parking detail not found with id: " + detailId));
