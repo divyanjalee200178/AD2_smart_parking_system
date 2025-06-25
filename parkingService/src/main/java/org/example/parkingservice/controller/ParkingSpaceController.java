@@ -16,7 +16,6 @@ public class ParkingSpaceController {
     @Autowired
     private ParkingSpaceService parkingSpaceService;
 
-    // --- ParkingSpace CRUD ---
 
     @PostMapping("/register")
     public ResponseEntity<ParkingSpace> registerSpace(@RequestBody ParkingSpace space) {
@@ -48,7 +47,6 @@ public class ParkingSpaceController {
         return ResponseEntity.noContent().build();
     }
 
-    // --- ParkingSpaceDetails CRUD ---
 
 
 }

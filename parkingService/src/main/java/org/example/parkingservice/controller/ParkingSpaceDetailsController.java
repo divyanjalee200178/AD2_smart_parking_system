@@ -20,8 +20,6 @@ public class ParkingSpaceDetailsController {
     private ParkingSpaceServiceDetails parkingSpaceDetailsService;
 
 
-    // --- ParkingSpaceDetails CRUD ---
-
     @PostMapping("/{spaceId}/details")
     public ResponseEntity<ParkingSpaceDetails> addDetail(
             @PathVariable Long spaceId,
